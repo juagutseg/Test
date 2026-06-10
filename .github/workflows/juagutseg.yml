@@ -1,0 +1,30 @@
+name: juagutseg-Automation
+on:
+  issues:
+    types: [opened]
+  project_card:
+    types: [moved]
+  workflow_dispatch: 
+
+jobs:
+  gestion-automatica:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Bienvenida personalizada (Accion Distinta)
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '¡Hola @' + context.actor + '! Gracias por abrir este issue en el fork de **juagutseg**. Automatización ejecutada correctamente.'
+            })
+
+      - name: Registro en el Log
+        run: |
+          echo "Evento disparador: ${{ github.event_name }}"
+          echo "Usuario: ${{ github.actor }}"
